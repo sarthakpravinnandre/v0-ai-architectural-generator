@@ -3,10 +3,7 @@
 import { useState } from 'react'
 import { InputForm } from '@/components/generator/InputForm'
 import { FloorPlanPreview } from '@/components/generator/FloorPlanPreview'
-import { StructuralOverlay } from '@/components/generator/StructuralOverlay'
-import { ThreeDPreview } from '@/components/generator/ThreeDPreview'
 import { CostEstimator } from '@/components/generator/CostEstimator'
-import { AIAssistant } from '@/components/generator/AIAssistant'
 import { PlotInput, Room, CostEstimate, StructuralElement } from '@/lib/types'
 import { generateFloorPlanSVG, downloadSVG } from '@/lib/svg-generator'
 import {
@@ -37,6 +34,7 @@ export default function GeneratorPage() {
   const [generatedPlan, setGeneratedPlan] = useState<GeneratedPlan | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [currentTab, setCurrentTab] = useState('floor-plan')
 
   const handleGenerate = async (input: PlotInput) => {
     setIsLoading(true)
@@ -178,14 +176,11 @@ export default function GeneratorPage() {
 
             {/* Results Tabs */}
             {generatedPlan && (
-              <Tabs defaultValue="floor-plan" className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
-                  <TabsTrigger value="floor-plan">Floor Plan</TabsTrigger>
-                  <TabsTrigger value="3d">3D Preview</TabsTrigger>
-                  <TabsTrigger value="structural">Structural</TabsTrigger>
-                  <TabsTrigger value="stats">Statistics</TabsTrigger>
-                  <TabsTrigger value="costs">Cost Estimate</TabsTrigger>
-                  <TabsTrigger value="ai">AI Assistant</TabsTrigger>
+              <Tabs defaultValue="floor-plan" className="w-full" onValueChange={setCurrentTab}>
+                <TabsList className="grid w-full grid-cols-3 mb-6">
+                  <TabsTrigger value="floor-plan" className="text-base">Floor Plan</TabsTrigger>
+                  <TabsTrigger value="stats" className="text-base">Analysis</TabsTrigger>
+                  <TabsTrigger value="costs" className="text-base">Cost Estimate</TabsTrigger>
                 </TabsList>
 
                 {/* Floor Plan Tab */}
@@ -200,26 +195,7 @@ export default function GeneratorPage() {
                   />
                 </TabsContent>
 
-                {/* 3D Preview Tab */}
-                <TabsContent value="3d" className="space-y-4">
-                  <ThreeDPreview
-                    rooms={generatedPlan.rooms}
-                    plotLength={generatedPlan.input.length}
-                    plotBreadth={generatedPlan.input.breadth}
-                    numFloors={generatedPlan.input.numFloors}
-                  />
-                </TabsContent>
 
-                {/* Structural Tab */}
-                <TabsContent value="structural" className="space-y-4">
-                  <StructuralOverlay
-                    columns={generatedPlan.structural.columns}
-                    beams={generatedPlan.structural.beams}
-                    walls={generatedPlan.structural.walls}
-                    plotLength={generatedPlan.input.length}
-                    plotBreadth={generatedPlan.input.breadth}
-                  />
-                </TabsContent>
 
                 {/* Statistics Tab */}
                 <TabsContent value="stats" className="space-y-4">
@@ -318,15 +294,7 @@ export default function GeneratorPage() {
                   />
                 </TabsContent>
 
-                {/* AI Assistant Tab */}
-                <TabsContent value="ai" className="space-y-4">
-                  <AIAssistant
-                    rooms={generatedPlan.rooms}
-                    plotLength={generatedPlan.input.length}
-                    plotBreadth={generatedPlan.input.breadth}
-                    numFloors={generatedPlan.input.numFloors}
-                  />
-                </TabsContent>
+
               </Tabs>
             )}
 

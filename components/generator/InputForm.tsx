@@ -74,53 +74,20 @@ export function InputForm({ onGenerate, isLoading = false }: InputFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Live Plot Preview */}
-        <div className="bg-card/50 backdrop-blur border border-primary/20 rounded-lg p-6 space-y-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Live Plot Preview</h3>
-            <span className="text-sm text-primary font-medium">{area.toFixed(0)} m² total</span>
-          </div>
-          
-          <div className="flex items-center justify-center bg-background/50 rounded-lg p-8 border border-border/50">
-            <svg width={displayLength + 60} height={displayBreadth + 60} viewBox={`0 0 ${displayLength + 60} ${displayBreadth + 60}`} className="drop-shadow-lg">
-              {/* Grid background */}
-              <defs>
-                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#00d9ff" strokeWidth="0.5" opacity="0.1"/>
-                </pattern>
-              </defs>
-              
-              {/* Plot boundary */}
-              <rect x="30" y="30" width={displayLength} height={displayBreadth} fill="url(#grid)" stroke="#00d9ff" strokeWidth="2" />
-              
-              {/* Corner markers */}
-              <circle cx="30" cy="30" r="3" fill="#00ff88" />
-              <circle cx={30 + displayLength} cy="30" r="3" fill="#00ff88" />
-              <circle cx="30" cy={30 + displayBreadth} r="3" fill="#00ff88" />
-              <circle cx={30 + displayLength} cy={30 + displayBreadth} r="3" fill="#00ff88" />
-              
-              {/* Dimension labels */}
-              <text x={30 + displayLength / 2} y="15" textAnchor="middle" fontSize="12" fill="#00d9ff" fontWeight="bold">
-                {length}m (Length)
-              </text>
-              <text x="8" y={30 + displayBreadth / 2} textAnchor="middle" fontSize="12" fill="#00d9ff" fontWeight="bold" transform={`rotate(-90 8 ${30 + displayBreadth / 2})`}>
-                {breadth}m (Breadth)
-              </text>
-              
-              {/* Center indicator */}
-              <circle cx={30 + displayLength / 2} cy={30 + displayBreadth / 2} r="2" fill="#0099ff" opacity="0.6" />
-            </svg>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-background/50 border border-border/50 rounded-lg p-3">
-              <p className="text-xs text-foreground/60 uppercase tracking-wide">North-South</p>
-              <p className="text-xl font-bold text-primary">{length}m</p>
+        {/* Quick Dimensions Summary */}
+        <div className="bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-4 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <p className="text-xs text-foreground/60 uppercase tracking-widest font-semibold">Length (N-S)</p>
+              <p className="text-3xl font-black text-primary">{length}m</p>
             </div>
-            <div className="bg-background/50 border border-border/50 rounded-lg p-3">
-              <p className="text-xs text-foreground/60 uppercase tracking-wide">East-West</p>
-              <p className="text-xl font-bold text-primary">{breadth}m</p>
+            <div className="space-y-1">
+              <p className="text-xs text-foreground/60 uppercase tracking-widest font-semibold">Breadth (E-W)</p>
+              <p className="text-3xl font-black text-secondary">{breadth}m</p>
             </div>
+          </div>
+          <div className="border-t border-border/30 pt-2">
+            <p className="text-center text-sm font-semibold text-accent">{area.toFixed(0)} m² total plot area</p>
           </div>
         </div>
         
