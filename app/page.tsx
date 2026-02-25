@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Zap, BarChart3, FileText, Cube, Brain } from 'lucide-react'
+import { ArrowRight, Zap, BarChart3, FileText, Box, Brain } from 'lucide-react'
 
 export default function LandingPage() {
   return (
@@ -120,7 +120,7 @@ export default function LandingPage() {
             {/* 3D Preview */}
             <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Cube className="w-6 h-6 text-primary" />
+                <Box className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold">3D Visualization</h3>
               <p className="text-foreground/70">Interactive 3D preview of your building design with space visualization and walkthroughs.</p>
