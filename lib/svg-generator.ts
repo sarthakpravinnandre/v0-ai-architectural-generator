@@ -2,7 +2,7 @@
 
 import { Room, StructuralElement } from './types';
 
-const SCALE = 30; // pixels per meter - increased for better visibility and spacing
+const SCALE = 20; // pixels per meter
 
 // Premium dark theme colors for rooms
 const ROOM_COLORS: Record<string, string> = {

@@ -207,16 +207,17 @@ function generateFloorLayout(
       floor,
     });
   } else {
-    // UPPER FLOORS: Single unit with living + bedrooms + utilities
-    const floorSpacing = 0.5;
+    // UPPER FLOORS: Residential units with proper distribution
+    const floorSpacing = 0.4;
     let currentY = boundaryTop + floorSpacing;
     let currentX = boundaryLeft + floorSpacing;
+    let maxRowHeight = 0;
     
-    // ROW 1: Main spaces
+    // Unit 1: Living + Bedroom
     const livingW = 4.5;
     const livingH = 4.5;
     rooms.push({
-      id: `living-${floor}`,
+      id: `living-${floor}-1`,
       name: 'Living 1',
       type: 'living',
       x: currentX,
@@ -227,36 +228,52 @@ function generateFloorLayout(
     });
     
     currentX += livingW + floorSpacing;
+    maxRowHeight = livingH;
     
-    // Bedroom 2
+    // Bedrooms
+    const bdrm2Width = 3.0;
+    const bdrm2Height = 3.6;
+    const bdrm3Width = 3.0;
+    const bdrm3Height = 3.6;
+    
     rooms.push({
-      id: `bedroom2-${floor}`,
+      id: `bedroom-${floor}-2`,
       name: 'Bedroom 2',
       type: 'bedroom',
       x: currentX,
       y: currentY,
-      width: 3.0,
-      height: 3.6,
+      width: bdrm2Width,
+      height: bdrm2Height,
       floor,
     });
     
-    currentX += 3.0 + floorSpacing;
+    currentX += bdrm2Width + floorSpacing;
     
-    // Bedroom 3
     rooms.push({
-      id: `bedroom3-${floor}`,
+      id: `bedroom-${floor}-3`,
       name: 'Bedroom 3',
       type: 'bedroom',
       x: currentX,
       y: currentY,
-      width: 3.0,
-      height: 3.6,
+      width: bdrm3Width,
+      height: bdrm3Height,
       floor,
     });
     
-    // ROW 2: Kitchen and utilities (below Living)
-    currentY += Math.max(livingH, 3.6) + floorSpacing;
-    currentX = boundaryLeft + floorSpacing;
+    currentX += bdrm3Width + floorSpacing;
+    maxRowHeight = Math.max(maxRowHeight, bdrm2Height);
+    
+    // Kitchen
+    const kitW = 2.4;
+    const kitH = 3.0;
+    
+    // Check if kitchen fits in current row
+    if (currentX + kitW > boundaryRight - floorSpacing) {
+      // Move to next row
+      currentY += maxRowHeight + floorSpacing;
+      currentX = boundaryLeft + floorSpacing;
+      maxRowHeight = 0;
+    }
     
     rooms.push({
       id: `kitchen-${floor}`,
@@ -264,36 +281,44 @@ function generateFloorLayout(
       type: 'kitchen',
       x: currentX,
       y: currentY,
-      width: 2.4,
-      height: 3.0,
+      width: kitW,
+      height: kitH,
       floor,
     });
     
-    currentX += 2.4 + floorSpacing;
+    currentX += kitW + floorSpacing;
+    maxRowHeight = Math.max(maxRowHeight, kitH);
     
-    // Bathroom
+    // Bottom row: Bathrooms and toilet
+    currentY += maxRowHeight + floorSpacing;
+    currentX = boundaryLeft + floorSpacing;
+    
+    const bathroomW = 1.8;
+    const bathroomH = 2.1;
     rooms.push({
       id: `bathroom-${floor}`,
       name: 'Bathroom',
       type: 'bathroom',
       x: currentX,
       y: currentY,
-      width: 1.8,
-      height: 2.1,
+      width: bathroomW,
+      height: bathroomH,
       floor,
     });
     
-    currentX += 1.8 + floorSpacing;
+    currentX += bathroomW + floorSpacing;
     
-    // Balcony (right side)
+    // Balcony
+    const balconyW = 1.8;
+    const balconyH = 3.0;
     rooms.push({
       id: `balcony-${floor}`,
       name: 'Balcony',
       type: 'balcony',
       x: currentX,
       y: currentY,
-      width: 1.8,
-      height: 3.0,
+      width: balconyW,
+      height: balconyH,
       floor,
     });
   }
