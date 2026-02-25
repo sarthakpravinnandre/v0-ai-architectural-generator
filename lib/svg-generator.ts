@@ -3,28 +3,35 @@
 import { Room, StructuralElement } from './types';
 
 const SCALE = 20; // pixels per meter
+
+// Premium dark theme colors for rooms
 const ROOM_COLORS: Record<string, string> = {
-  bedroom: '#e0e7ff',
-  kitchen: '#fef3c7',
-  bathroom: '#d1fae5',
-  living: '#f3e8ff',
-  dining: '#fecaca',
-  hallway: '#f0fdf4',
-  parking: '#e5e7eb',
-  storage: '#dbeafe',
-  balcony: '#fef08a',
+  bedroom: '#1a3a4f',
+  kitchen: '#2a3a3f',
+  bathroom: '#1a4040',
+  toilet: '#1a3a3a',
+  living: '#2a3a5f',
+  dining: '#3a2a4f',
+  hallway: '#1a2a3f',
+  parking: '#2a2a3a',
+  storage: '#1a3a4a',
+  balcony: '#2a4a4f',
+  staircase: '#1a2a2f',
 };
 
+// Bright cyan/neon accent colors for borders
 const ROOM_BORDERS: Record<string, string> = {
-  bedroom: '#818cf8',
-  kitchen: '#f59e0b',
-  bathroom: '#10b981',
-  living: '#a78bfa',
-  dining: '#ef4444',
-  hallway: '#22c55e',
-  parking: '#6b7280',
-  storage: '#0ea5e9',
-  balcony: '#eab308',
+  bedroom: '#00d9ff',
+  kitchen: '#0099ff',
+  bathroom: '#00ff88',
+  toilet: '#00ff88',
+  living: '#ff6b9d',
+  dining: '#ffd700',
+  hallway: '#00d9ff',
+  parking: '#4a5568',
+  storage: '#0099ff',
+  balcony: '#00ff88',
+  staircase: '#00d9ff',
 };
 
 export function generateFloorPlanSVG(
@@ -39,18 +46,25 @@ export function generateFloorPlanSVG(
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}" width="${width + padding * 2}" height="${height + padding * 2}">`;
   
-  // Background
-  svg += `<rect width="${width + padding * 2}" height="${height + padding * 2}" fill="#ffffff"/>`;
+  // Background - dark theme
+  svg += `<rect width="${width + padding * 2}" height="${height + padding * 2}" fill="#0a0e27"/>`;
+  
+  // Grid pattern
+  svg += `<defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#00d9ff" stroke-width="0.5" opacity="0.05"/></pattern></defs>`;
+  
+  // Plot background with grid
+  svg += `<rect x="${padding}" y="${padding}" width="${width}" height="${height}" fill="url(#grid)"/>`;
   
   // Title
-  svg += `<text x="${(width + padding * 2) / 2}" y="25" font-size="18" font-weight="bold" text-anchor="middle" fill="#1a3a52">Floor ${floorNumber} - Floor Plan</text>`;
+  svg += `<text x="${(width + padding * 2) / 2}" y="25" font-size="18" font-weight="bold" text-anchor="middle" fill="#00d9ff">Floor ${floorNumber} Plan</text>`;
   
-  // Plot border
-  svg += `<rect x="${padding}" y="${padding}" width="${width}" height="${height}" fill="none" stroke="#1a3a52" stroke-width="2"/>`;
+  // Plot border with cyan glow
+  svg += `<rect x="${padding}" y="${padding}" width="${width}" height="${height}" fill="none" stroke="#00d9ff" stroke-width="2.5" opacity="0.8"/>`;
+  svg += `<rect x="${padding - 1}" y="${padding - 1}" width="${width + 2}" height="${height + 2}" fill="none" stroke="#00d9ff" stroke-width="0.5" opacity="0.2"/>`;
   
-  // Dimensions
-  svg += `<text x="${padding + width / 2}" y="${padding - 10}" font-size="12" text-anchor="middle" fill="#666">${plotLength}m</text>`;
-  svg += `<text x="${padding - 20}" y="${padding + height / 2}" font-size="12" text-anchor="middle" fill="#666" transform="rotate(-90 ${padding - 20} ${padding + height / 2})">${plotBreadth}m</text>`;
+  // Dimension labels with enhanced styling
+  svg += `<text x="${padding + width / 2}" y="${padding - 15}" font-size="14" font-weight="bold" text-anchor="middle" fill="#00d9ff">${plotLength}m (Length)</text>`;
+  svg += `<text x="${padding - 35}" y="${padding + height / 2 + 5}" font-size="14" font-weight="bold" text-anchor="middle" fill="#00d9ff" transform="rotate(-90 ${padding - 35} ${padding + height / 2})">${plotBreadth}m (Breadth)</text>`;
   
   // Render rooms
   for (const room of rooms) {
@@ -59,30 +73,43 @@ export function generateFloorPlanSVG(
     const w = room.width * SCALE;
     const h = room.height * SCALE;
     
-    const bgColor = ROOM_COLORS[room.type] || '#f0f0f0';
-    const borderColor = ROOM_BORDERS[room.type] || '#999';
+    const bgColor = ROOM_COLORS[room.type] || '#1a2235';
+    const borderColor = ROOM_BORDERS[room.type] || '#00d9ff';
     
-    // Room rectangle
-    svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${bgColor}" stroke="${borderColor}" stroke-width="2" rx="4"/>`;
+    // Room shadow/glow effect
+    svg += `<filter id="glow-${room.id}"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
     
-    // Room label
-    const label = `${room.name}\n${room.width.toFixed(1)}m × ${room.height.toFixed(1)}m`;
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 - 8}" font-size="10" text-anchor="middle" font-weight="bold" fill="#333">${room.name}</text>`;
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 8}" font-size="8" text-anchor="middle" fill="#666">${room.width.toFixed(1)}m × ${room.height.toFixed(1)}m</text>`;
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 18}" font-size="7" text-anchor="middle" fill="#999">${(room.width * room.height).toFixed(1)}m²</text>`;
+    // Room rectangle with gradient fill
+    svg += `<defs><linearGradient id="grad-${room.id}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${bgColor};stop-opacity:0.6" /><stop offset="100%" style="stop-color:${bgColor};stop-opacity:0.9" /></linearGradient></defs>`;
+    svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#grad-${room.id})" stroke="${borderColor}" stroke-width="2" rx="6" opacity="0.95" filter="url(#glow-${room.id})"/>`;
+    
+    // Inner border highlight
+    svg += `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" fill="none" stroke="${borderColor}" stroke-width="0.5" rx="5" opacity="0.3"/>`;
+    
+    // Room name label
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 - 12}" font-size="11" text-anchor="middle" font-weight="bold" fill="#f0f4f8">${room.name}</text>`;
+    
+    // Dimensions
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 3}" font-size="9" text-anchor="middle" fill="#00d9ff" opacity="0.9">${room.width.toFixed(1)}m × ${room.height.toFixed(1)}m</text>`;
+    
+    // Area in square meters
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 14}" font-size="8" text-anchor="middle" fill="#a0aec0" opacity="0.7">${(room.width * room.height).toFixed(1)} m²</text>`;
   }
   
   // Legend
   const legendY = padding + height + 20;
-  svg += `<text x="${padding}" y="${legendY}" font-size="12" font-weight="bold" fill="#1a3a52">Legend:</text>`;
+  svg += `<line x1="${padding}" y1="${legendY - 5}" x2="${width + padding}" y2="${legendY - 5}" stroke="#00d9ff" stroke-width="1" opacity="0.3"/>`;
+  svg += `<text x="${padding}" y="${legendY + 10}" font-size="12" font-weight="bold" fill="#00d9ff">Legend:</text>`;
   
-  let legendX = padding;
   Object.entries(ROOM_COLORS).forEach(([type, color], index) => {
-    const xPos = padding + (index % 4) * 120;
-    const yPos = legendY + 20 + Math.floor(index / 4) * 20;
+    const xPos = padding + (index % 5) * 110;
+    const yPos = legendY + 30 + Math.floor(index / 5) * 22;
     
-    svg += `<rect x="${xPos}" y="${yPos - 10}" width="12" height="12" fill="${color}" stroke="${ROOM_BORDERS[type]}" stroke-width="1"/>`;
-    svg += `<text x="${xPos + 18}" y="${yPos - 2}" font-size="10" fill="#333">${type.charAt(0).toUpperCase() + type.slice(1)}</text>`;
+    // Legend color box with border
+    svg += `<rect x="${xPos}" y="${yPos - 10}" width="14" height="14" fill="${color}" stroke="${ROOM_BORDERS[type]}" stroke-width="1.5" rx="2" opacity="0.8"/>`;
+    
+    // Legend label
+    svg += `<text x="${xPos + 20}" y="${yPos - 2}" font-size="10" fill="#f0f4f8">${type.charAt(0).toUpperCase() + type.slice(1)}</text>`;
   });
   
   svg += `</svg>`;

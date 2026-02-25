@@ -21,7 +21,8 @@ export function CostEstimator({ costEstimate }: CostEstimatorProps) {
     return acc
   }, [] as Array<{ name: string; value: number }>)
 
-  const COLORS = ['#dc2626', '#2563eb', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899']
+  // Premium dark theme colors - cyan, blue, green, gold, pink
+  const COLORS = ['#00d9ff', '#0099ff', '#00ff88', '#ffd700', '#ff6b9d', '#00ff88']
 
   const pieData = categoryTotals.map((item, index) => ({
     ...item,

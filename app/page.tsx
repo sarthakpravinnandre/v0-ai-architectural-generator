@@ -8,13 +8,13 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="sticky top-0 z-50 border-b border-border/30 bg-background/40 backdrop-blur-xl supports-[backdrop-filter]:bg-background/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-primary">Visionary</div>
+          <div className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Visionary</div>
           <div className="flex gap-8 items-center">
-            <Link href="#features" className="text-sm hover:text-primary transition-colors">Features</Link>
-            <Link href="#how-it-works" className="text-sm hover:text-primary transition-colors">How It Works</Link>
-            <Link href="/generator" className="text-sm hover:text-primary transition-colors">Start Building</Link>
+            <Link href="#features" className="text-sm text-foreground/70 hover:text-primary transition-colors">Features</Link>
+            <Link href="#how-it-works" className="text-sm text-foreground/70 hover:text-primary transition-colors">How It Works</Link>
+            <Link href="/generator" className="text-sm text-foreground/70 hover:text-primary transition-colors">Start Building</Link>
           </div>
         </div>
       </nav>
@@ -80,57 +80,63 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* 2D Floor Plans */}
-            <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+            <div className="group relative bg-card/40 backdrop-blur border border-primary/20 rounded-xl p-8 space-y-4 hover:border-primary/50 transition-all duration-300 hover:bg-card/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 bg-gradient-to-br from-primary/30 to-primary/10 rounded-lg flex items-center justify-center">
                 <FileText className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold">2D Floor Plans</h3>
-              <p className="text-foreground/70">Automatically generate detailed SVG-based floor plans with labeled rooms, dimensions, and full editable capabilities.</p>
+              <h3 className="relative text-xl font-semibold">2D Floor Plans</h3>
+              <p className="relative text-foreground/70">Automatically generate detailed SVG-based floor plans with labeled rooms, dimensions, and full editable capabilities.</p>
             </div>
 
             {/* Structural Layout */}
-            <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-primary" />
+            <div className="group relative bg-card/40 backdrop-blur border border-secondary/20 rounded-xl p-8 space-y-4 hover:border-secondary/50 transition-all duration-300 hover:bg-card/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 bg-gradient-to-br from-secondary/30 to-secondary/10 rounded-lg flex items-center justify-center">
+                <Zap className="w-6 h-6 text-secondary" />
               </div>
-              <h3 className="text-xl font-semibold">Structural Analysis</h3>
-              <p className="text-foreground/70">Column placement, beam layouts, and load distribution calculations following Indian building standards (IS:875).</p>
+              <h3 className="relative text-xl font-semibold">Structural Analysis</h3>
+              <p className="relative text-foreground/70">Column placement, beam layouts, and load distribution calculations following Indian building standards (IS:875).</p>
             </div>
 
             {/* Cost Estimation */}
-            <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-primary" />
+            <div className="group relative bg-card/40 backdrop-blur border border-accent/20 rounded-xl p-8 space-y-4 hover:border-accent/50 transition-all duration-300 hover:bg-card/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 bg-gradient-to-br from-accent/30 to-accent/10 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-accent" />
               </div>
-              <h3 className="text-xl font-semibold">Cost Estimation</h3>
-              <p className="text-foreground/70">Dynamic material and labor cost breakdowns with real-time updates as you modify your plan.</p>
+              <h3 className="relative text-xl font-semibold">Cost Estimation</h3>
+              <p className="relative text-foreground/70">Dynamic material and labor cost breakdowns with real-time updates as you modify your plan.</p>
             </div>
 
             {/* PDF Download */}
-            <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+            <div className="group relative bg-card/40 backdrop-blur border border-primary/20 rounded-xl p-8 space-y-4 hover:border-primary/50 transition-all duration-300 hover:bg-card/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 bg-gradient-to-br from-primary/30 to-primary/10 rounded-lg flex items-center justify-center">
                 <FileText className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold">Professional PDFs</h3>
-              <p className="text-foreground/70">Export complete construction documentation including floor plans, structural details, and cost breakdowns.</p>
+              <h3 className="relative text-xl font-semibold">Professional PDFs</h3>
+              <p className="relative text-foreground/70">Export complete construction documentation including floor plans, structural details, and cost breakdowns.</p>
             </div>
 
             {/* 3D Preview */}
-            <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Box className="w-6 h-6 text-primary" />
+            <div className="group relative bg-card/40 backdrop-blur border border-secondary/20 rounded-xl p-8 space-y-4 hover:border-secondary/50 transition-all duration-300 hover:bg-card/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 bg-gradient-to-br from-secondary/30 to-secondary/10 rounded-lg flex items-center justify-center">
+                <Box className="w-6 h-6 text-secondary" />
               </div>
-              <h3 className="text-xl font-semibold">3D Visualization</h3>
-              <p className="text-foreground/70">Interactive 3D preview of your building design with space visualization and walkthroughs.</p>
+              <h3 className="relative text-xl font-semibold">3D Visualization</h3>
+              <p className="relative text-foreground/70">Interactive 3D preview of your building design with space visualization and walkthroughs.</p>
             </div>
 
             {/* AI Chat */}
-            <div className="bg-background border border-border rounded-lg p-8 space-y-4 hover:border-primary/50 transition-colors">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                <Brain className="w-6 h-6 text-primary" />
+            <div className="group relative bg-card/40 backdrop-blur border border-accent/20 rounded-xl p-8 space-y-4 hover:border-accent/50 transition-all duration-300 hover:bg-card/60">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 bg-gradient-to-br from-accent/30 to-accent/10 rounded-lg flex items-center justify-center">
+                <Brain className="w-6 h-6 text-accent" />
               </div>
-              <h3 className="text-xl font-semibold">AI Assistant</h3>
-              <p className="text-foreground/70">Get instant answers about your design, optimization suggestions, and architectural best practices.</p>
+              <h3 className="relative text-xl font-semibold">AI Assistant</h3>
+              <p className="relative text-foreground/70">Get instant answers about your design, optimization suggestions, and architectural best practices.</p>
             </div>
           </div>
         </div>
