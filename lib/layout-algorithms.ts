@@ -68,111 +68,259 @@ function generateFloorLayout(
   floor: number
 ): Room[] {
   const rooms: Room[] = [];
-  let roomId = 0;
+  const spacing = 0.4; // Gap between rooms
   
-  // Start positions with setback margins
-  const startX = setbacks.left;
-  const startY = setbacks.front;
+  // Define usable area boundaries
+  const boundaryLeft = setbacks.left;
+  const boundaryRight = input.length - setbacks.right;
+  const boundaryTop = setbacks.front;
+  const boundaryBottom = input.breadth - setbacks.rear;
   
   if (floor === 1) {
-    // Ground floor: include parking, lobbies, common areas
-    const parkingAreaPerSpace = ROOM_SPECS.parking.prefArea;
-    let parkX = startX;
-    let parkY = startY;
+    // GROUND FLOOR: Parking + Lobby + Staircase
     
-    // Arrange parking in grid
-    const parkingPerRow = Math.floor(usableLength / (ROOM_SPECS.parking.width + 0.5));
-    for (let i = 0; i < parkingSpaces && i < 6; i++) {
-      const row = Math.floor(i / parkingPerRow);
-      const col = i % parkingPerRow;
-      
+    // Top row: Parking spaces (arranged horizontally)
+    const parkingHeight = ROOM_SPECS.parking.height;
+    const parkingWidth = ROOM_SPECS.parking.width;
+    let parkX = boundaryLeft + spacing;
+    const parkY = boundaryTop + spacing;
+    
+    // Calculate how many parkings fit in the available width
+    const maxParkingPerRow = Math.floor((usableLength - spacing) / (parkingWidth + spacing));
+    const actualParking = Math.min(parkingSpaces, Math.min(4, maxParkingPerRow));
+    
+    for (let i = 0; i < actualParking; i++) {
       rooms.push({
         id: `parking-${floor}-${i}`,
         name: `Parking ${i + 1}`,
         type: 'parking',
-        x: startX + col * (ROOM_SPECS.parking.width + 0.5),
-        y: startY + row * (ROOM_SPECS.parking.height + 0.5),
-        width: ROOM_SPECS.parking.width,
-        height: ROOM_SPECS.parking.height,
+        x: parkX,
+        y: parkY,
+        width: parkingWidth,
+        height: parkingHeight,
+        floor,
+      });
+      parkX += parkingWidth + spacing;
+    }
+    
+    // Middle row: Main spaces (Living, Kitchen, Bedrooms)
+    const middleY = parkY + parkingHeight + spacing;
+    let middleX = boundaryLeft + spacing;
+    
+    // Living area (large central space)
+    const livingWidth = 4.5;
+    const livingHeight = 4.5;
+    rooms.push({
+      id: `living-${floor}`,
+      name: 'Living 1',
+      type: 'living',
+      x: middleX,
+      y: middleY,
+      width: livingWidth,
+      height: livingHeight,
+      floor,
+    });
+    
+    middleX += livingWidth + spacing;
+    
+    // Bedrooms row 2 (side by side)
+    const bedroomWidth = 3.0;
+    const bedroomHeight = 3.6;
+    
+    for (let i = 0; i < 2 && middleX + bedroomWidth <= boundaryRight; i++) {
+      rooms.push({
+        id: `bedroom-${floor}-${i}`,
+        name: `Bedroom ${i + 2}`,
+        type: 'bedroom',
+        x: middleX,
+        y: middleY,
+        width: bedroomWidth,
+        height: bedroomHeight,
+        floor,
+      });
+      middleX += bedroomWidth + spacing;
+    }
+    
+    // Kitchen (right side)
+    const kitchenWidth = 2.4;
+    const kitchenHeight = 3.0;
+    if (middleX + kitchenWidth <= boundaryRight) {
+      rooms.push({
+        id: `kitchen-${floor}`,
+        name: 'Kitchen 4',
+        type: 'kitchen',
+        x: middleX,
+        y: middleY,
+        width: kitchenWidth,
+        height: kitchenHeight,
         floor,
       });
     }
     
-    // Staircase placement
-    const stairX = startX + usableLength - ROOM_SPECS.staircase.width - 0.5;
-    const stairY = startY + usableBreadth - ROOM_SPECS.staircase.height - 0.5;
+    // Bottom row: Additional spaces
+    const bottomY = middleY + Math.max(livingHeight, bedroomHeight) + spacing;
+    let bottomX = boundaryLeft + spacing;
     
+    // Bathroom
+    const bathroomWidth = 1.8;
+    const bathroomHeight = 2.1;
+    rooms.push({
+      id: `bathroom-${floor}`,
+      name: 'Bathroom',
+      type: 'bathroom',
+      x: bottomX,
+      y: bottomY,
+      width: bathroomWidth,
+      height: bathroomHeight,
+      floor,
+    });
+    
+    bottomX += bathroomWidth + spacing;
+    
+    // Staircase
+    const stairsWidth = 1.8;
+    const stairsHeight = 3.0;
     rooms.push({
       id: `staircase-${floor}`,
       name: 'Staircase',
       type: 'staircase',
-      x: stairX,
-      y: stairY,
-      width: ROOM_SPECS.staircase.width,
-      height: ROOM_SPECS.staircase.height,
+      x: bottomX,
+      y: bottomY,
+      width: stairsWidth,
+      height: stairsHeight,
       floor,
     });
     
-    // Main lobby/entrance hall
+    bottomX += stairsWidth + spacing;
+    
+    // Storage
+    const storageWidth = 1.8;
+    const storageHeight = 2.4;
     rooms.push({
-      id: `lobby-${floor}`,
-      name: 'Lobby',
-      type: 'living',
-      x: startX + ROOM_SPECS.parking.width + 1.0,
-      y: startY + ROOM_SPECS.parking.height + 1.0,
-      width: ROOM_SPECS.living.width,
-      height: ROOM_SPECS.living.height,
+      id: `storage-${floor}`,
+      name: 'Storage',
+      type: 'storage',
+      x: bottomX,
+      y: bottomY,
+      width: storageWidth,
+      height: storageHeight,
       floor,
     });
   } else {
-    // Upper floors: residential units or office spaces
-    const roomsPerFloor = input.plotType === 'residential' ? 4 : 3;
-    const spacing = 0.5;
-    
-    let currentX = startX;
-    let currentY = startY;
+    // UPPER FLOORS: Residential units with proper distribution
+    const floorSpacing = 0.4;
+    let currentY = boundaryTop + floorSpacing;
+    let currentX = boundaryLeft + floorSpacing;
     let maxRowHeight = 0;
-    let roomCount = 0;
     
-    // Generate residential/office units
-    const unitTypes: Array<keyof typeof ROOM_SPECS> = input.plotType === 'residential'
-      ? ['living', 'bedroom', 'bedroom', 'kitchen', 'bathroom', 'toilet', 'balcony']
-      : ['living', 'living', 'kitchen', 'bathroom'];
+    // Unit 1: Living + Bedroom
+    const livingW = 4.5;
+    const livingH = 4.5;
+    rooms.push({
+      id: `living-${floor}-1`,
+      name: 'Living 1',
+      type: 'living',
+      x: currentX,
+      y: currentY,
+      width: livingW,
+      height: livingH,
+      floor,
+    });
     
-    for (const roomType of unitTypes) {
-      if (roomCount >= roomsPerFloor) break;
-      
-      const spec = ROOM_SPECS[roomType];
-      const width = spec.width;
-      const height = spec.height;
-      
-      // Check if room fits in current row
-      if (currentX + width > startX + usableLength - 1.0) {
-        currentY += maxRowHeight + spacing;
-        currentX = startX;
-        maxRowHeight = 0;
-        
-        // Check if exceeds floor depth
-        if (currentY + height > startY + usableBreadth - 1.0) {
-          break;
-        }
-      }
-      
-      rooms.push({
-        id: `room-${floor}-${roomCount}`,
-        name: `${roomType.charAt(0).toUpperCase() + roomType.slice(1)} ${roomCount + 1}`,
-        type: roomType,
-        x: currentX,
-        y: currentY,
-        width: width,
-        height: height,
-        floor,
-      });
-      
-      currentX += width + spacing;
-      maxRowHeight = Math.max(maxRowHeight, height);
-      roomCount++;
+    currentX += livingW + floorSpacing;
+    maxRowHeight = livingH;
+    
+    // Bedrooms
+    const bdrm2Width = 3.0;
+    const bdrm2Height = 3.6;
+    const bdrm3Width = 3.0;
+    const bdrm3Height = 3.6;
+    
+    rooms.push({
+      id: `bedroom-${floor}-2`,
+      name: 'Bedroom 2',
+      type: 'bedroom',
+      x: currentX,
+      y: currentY,
+      width: bdrm2Width,
+      height: bdrm2Height,
+      floor,
+    });
+    
+    currentX += bdrm2Width + floorSpacing;
+    
+    rooms.push({
+      id: `bedroom-${floor}-3`,
+      name: 'Bedroom 3',
+      type: 'bedroom',
+      x: currentX,
+      y: currentY,
+      width: bdrm3Width,
+      height: bdrm3Height,
+      floor,
+    });
+    
+    currentX += bdrm3Width + floorSpacing;
+    maxRowHeight = Math.max(maxRowHeight, bdrm2Height);
+    
+    // Kitchen
+    const kitW = 2.4;
+    const kitH = 3.0;
+    
+    // Check if kitchen fits in current row
+    if (currentX + kitW > boundaryRight - floorSpacing) {
+      // Move to next row
+      currentY += maxRowHeight + floorSpacing;
+      currentX = boundaryLeft + floorSpacing;
+      maxRowHeight = 0;
     }
+    
+    rooms.push({
+      id: `kitchen-${floor}`,
+      name: 'Kitchen 4',
+      type: 'kitchen',
+      x: currentX,
+      y: currentY,
+      width: kitW,
+      height: kitH,
+      floor,
+    });
+    
+    currentX += kitW + floorSpacing;
+    maxRowHeight = Math.max(maxRowHeight, kitH);
+    
+    // Bottom row: Bathrooms and toilet
+    currentY += maxRowHeight + floorSpacing;
+    currentX = boundaryLeft + floorSpacing;
+    
+    const bathroomW = 1.8;
+    const bathroomH = 2.1;
+    rooms.push({
+      id: `bathroom-${floor}`,
+      name: 'Bathroom',
+      type: 'bathroom',
+      x: currentX,
+      y: currentY,
+      width: bathroomW,
+      height: bathroomH,
+      floor,
+    });
+    
+    currentX += bathroomW + floorSpacing;
+    
+    // Balcony
+    const balconyW = 1.8;
+    const balconyH = 3.0;
+    rooms.push({
+      id: `balcony-${floor}`,
+      name: 'Balcony',
+      type: 'balcony',
+      x: currentX,
+      y: currentY,
+      width: balconyW,
+      height: balconyH,
+      floor,
+    });
   }
   
   return rooms;
@@ -190,6 +338,63 @@ function calculateSetbacks(length: number, breadth: number): { front: number; re
   if (breadth > 30) left = 3.0;
   
   return { front, rear, left, right };
+}
+
+// Validation: Check if two rooms overlap
+function roomsOverlap(room1: Room, room2: Room): boolean {
+  const r1Right = room1.x + room1.width;
+  const r1Bottom = room1.y + room1.height;
+  const r2Right = room2.x + room2.width;
+  const r2Bottom = room2.y + room2.height;
+  
+  return !(
+    r1Right <= room2.x || // room1 is completely to the left
+    room1.x >= r2Right || // room1 is completely to the right
+    r1Bottom <= room2.y || // room1 is completely above
+    room1.y >= r2Bottom // room1 is completely below
+  );
+}
+
+// Validate that no rooms overlap within the same floor
+export function validateFloorLayout(rooms: Room[], plotLength: number, plotBreadth: number): {
+  valid: boolean;
+  issues: string[];
+} {
+  const issues: string[] = [];
+  
+  // Group rooms by floor
+  const floorRooms = new Map<number, Room[]>();
+  for (const room of rooms) {
+    if (!floorRooms.has(room.floor)) {
+      floorRooms.set(room.floor, []);
+    }
+    floorRooms.get(room.floor)!.push(room);
+  }
+  
+  // Check each floor for overlaps and boundary violations
+  for (const [floor, floorRoomArray] of floorRooms) {
+    // Check for overlaps
+    for (let i = 0; i < floorRoomArray.length; i++) {
+      for (let j = i + 1; j < floorRoomArray.length; j++) {
+        if (roomsOverlap(floorRoomArray[i], floorRoomArray[j])) {
+          issues.push(`Floor ${floor}: "${floorRoomArray[i].name}" overlaps with "${floorRoomArray[j].name}"`);
+        }
+      }
+    }
+    
+    // Check boundary violations
+    for (const room of floorRoomArray) {
+      if (room.x < 0) issues.push(`Floor ${floor}: "${room.name}" exceeds left boundary`);
+      if (room.y < 0) issues.push(`Floor ${floor}: "${room.name}" exceeds top boundary`);
+      if (room.x + room.width > plotLength) issues.push(`Floor ${floor}: "${room.name}" exceeds right boundary`);
+      if (room.y + room.height > plotBreadth) issues.push(`Floor ${floor}: "${room.name}" exceeds bottom boundary`);
+    }
+  }
+  
+  return {
+    valid: issues.length === 0,
+    issues,
+  };
 }
 
 

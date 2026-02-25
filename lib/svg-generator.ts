@@ -44,10 +44,10 @@ export function generateFloorPlanSVG(
   const height = plotBreadth * SCALE;
   const padding = 40;
 
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width + padding * 2} ${height + padding * 2}" width="${width + padding * 2}" height="${height + padding * 2}">`;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width + padding * 3} ${height + padding * 3}" width="${width + padding * 3}" height="${height + padding * 3}">`;
   
   // Background - dark theme
-  svg += `<rect width="${width + padding * 2}" height="${height + padding * 2}" fill="#0a0e27"/>`;
+  svg += `<rect width="${width + padding * 3}" height="${height + padding * 3}" fill="#0a0e27"/>`;
   
   // Grid pattern
   svg += `<defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="#00d9ff" stroke-width="0.5" opacity="0.05"/></pattern></defs>`;
@@ -55,16 +55,32 @@ export function generateFloorPlanSVG(
   // Plot background with grid
   svg += `<rect x="${padding}" y="${padding}" width="${width}" height="${height}" fill="url(#grid)"/>`;
   
-  // Title
-  svg += `<text x="${(width + padding * 2) / 2}" y="25" font-size="18" font-weight="bold" text-anchor="middle" fill="#00d9ff">Floor ${floorNumber} Plan</text>`;
+  // Title with floor number
+  svg += `<text x="${(width + padding * 3) / 2}" y="28" font-size="20" font-weight="bold" text-anchor="middle" fill="#00d9ff">Floor ${floorNumber} Plan</text>`;
   
-  // Plot border with cyan glow
-  svg += `<rect x="${padding}" y="${padding}" width="${width}" height="${height}" fill="none" stroke="#00d9ff" stroke-width="2.5" opacity="0.8"/>`;
-  svg += `<rect x="${padding - 1}" y="${padding - 1}" width="${width + 2}" height="${height + 2}" fill="none" stroke="#00d9ff" stroke-width="0.5" opacity="0.2"/>`;
+  // Plot border with cyan glow (main boundary)
+  svg += `<rect x="${padding}" y="${padding}" width="${width}" height="${height}" fill="none" stroke="#00d9ff" stroke-width="3" opacity="0.9"/>`;
+  svg += `<rect x="${padding - 2}" y="${padding - 2}" width="${width + 4}" height="${height + 4}" fill="none" stroke="#00d9ff" stroke-width="0.5" opacity="0.2"/>`;
   
-  // Dimension labels with enhanced styling
-  svg += `<text x="${padding + width / 2}" y="${padding - 15}" font-size="14" font-weight="bold" text-anchor="middle" fill="#00d9ff">${plotLength}m (Length)</text>`;
-  svg += `<text x="${padding - 35}" y="${padding + height / 2 + 5}" font-size="14" font-weight="bold" text-anchor="middle" fill="#00d9ff" transform="rotate(-90 ${padding - 35} ${padding + height / 2})">${plotBreadth}m (Breadth)</text>`;
+  // Compass rose (orientation indicator)
+  const compassX = padding + width + 25;
+  const compassY = padding + 30;
+  const compassSize = 20;
+  svg += `<circle cx="${compassX}" cy="${compassY}" r="${compassSize}" fill="none" stroke="#00d9ff" stroke-width="1" opacity="0.5"/>`;
+  svg += `<text x="${compassX}" y="${compassY - compassSize - 8}" font-size="12" font-weight="bold" text-anchor="middle" fill="#ff6b9d">N</text>`;
+  svg += `<text x="${compassX + compassSize + 8}" y="${compassY + 5}" font-size="10" text-anchor="start" fill="#a0aec0">E</text>`;
+  
+  // Top dimension ruler (Length)
+  svg += `<line x1="${padding}" y1="${padding - 20}" x2="${padding + width}" y2="${padding - 20}" stroke="#00d9ff" stroke-width="1.5" opacity="0.6"/>`;
+  svg += `<line x1="${padding}" y1="${padding - 24}" x2="${padding}" y2="${padding - 16}" stroke="#00d9ff" stroke-width="1.5"/>`;
+  svg += `<line x1="${padding + width}" y1="${padding - 24}" x2="${padding + width}" y2="${padding - 16}" stroke="#00d9ff" stroke-width="1.5"/>`;
+  svg += `<text x="${padding + width / 2}" y="${padding - 28}" font-size="13" font-weight="bold" text-anchor="middle" fill="#00d9ff">${plotLength}m (Length/North-South)</text>`;
+  
+  // Left dimension ruler (Breadth)
+  svg += `<line x1="${padding - 20}" y1="${padding}" x2="${padding - 20}" y2="${padding + height}" stroke="#0099ff" stroke-width="1.5" opacity="0.6"/>`;
+  svg += `<line x1="${padding - 24}" y1="${padding}" x2="${padding - 16}" y2="${padding}" stroke="#0099ff" stroke-width="1.5"/>`;
+  svg += `<line x1="${padding - 24}" y1="${padding + height}" x2="${padding - 16}" y2="${padding + height}" stroke="#0099ff" stroke-width="1.5"/>`;
+  svg += `<text x="${padding - 38}" y="${padding + height / 2}" font-size="13" font-weight="bold" text-anchor="middle" fill="#0099ff" transform="rotate(-90 ${padding - 38} ${padding + height / 2})">${plotBreadth}m (Breadth/East-West)</text>`;
   
   // Render rooms
   for (const room of rooms) {
