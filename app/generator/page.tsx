@@ -6,6 +6,7 @@ import { FloorPlanPreview } from '@/components/generator/FloorPlanPreview'
 import { StructuralOverlay } from '@/components/generator/StructuralOverlay'
 import { ThreeDPreview } from '@/components/generator/ThreeDPreview'
 import { CostEstimator } from '@/components/generator/CostEstimator'
+import { AIAssistant } from '@/components/generator/AIAssistant'
 import { PlotInput, Room, CostEstimate, StructuralElement } from '@/lib/types'
 import { generateFloorPlanSVG, downloadSVG } from '@/lib/svg-generator'
 import {
@@ -178,12 +179,13 @@ export default function GeneratorPage() {
             {/* Results Tabs */}
             {generatedPlan && (
               <Tabs defaultValue="floor-plan" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
+                <TabsList className="grid w-full grid-cols-6">
                   <TabsTrigger value="floor-plan">Floor Plan</TabsTrigger>
                   <TabsTrigger value="3d">3D Preview</TabsTrigger>
                   <TabsTrigger value="structural">Structural</TabsTrigger>
                   <TabsTrigger value="stats">Statistics</TabsTrigger>
                   <TabsTrigger value="costs">Cost Estimate</TabsTrigger>
+                  <TabsTrigger value="ai">AI Assistant</TabsTrigger>
                 </TabsList>
 
                 {/* Floor Plan Tab */}
@@ -313,6 +315,16 @@ export default function GeneratorPage() {
                 <TabsContent value="costs">
                   <CostEstimator
                     costEstimate={generatedPlan.costEstimate}
+                  />
+                </TabsContent>
+
+                {/* AI Assistant Tab */}
+                <TabsContent value="ai" className="space-y-4">
+                  <AIAssistant
+                    rooms={generatedPlan.rooms}
+                    plotLength={generatedPlan.input.length}
+                    plotBreadth={generatedPlan.input.breadth}
+                    numFloors={generatedPlan.input.numFloors}
                   />
                 </TabsContent>
               </Tabs>

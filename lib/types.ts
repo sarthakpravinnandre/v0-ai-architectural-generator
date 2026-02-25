@@ -15,7 +15,7 @@ export interface Room {
   y: number;
   width: number;
   height: number;
-  type: 'bedroom' | 'kitchen' | 'bathroom' | 'living' | 'dining' | 'hallway' | 'parking' | 'storage' | 'balcony';
+  type: 'bedroom' | 'kitchen' | 'bathroom' | 'toilet' | 'living' | 'dining' | 'hallway' | 'parking' | 'storage' | 'balcony' | 'staircase';
   floor: number;
 }
 

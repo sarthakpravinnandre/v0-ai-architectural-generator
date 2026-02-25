@@ -42,30 +42,28 @@ export default function LandingPage() {
                 Start Planning <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline">
-              Watch Demo
-            </Button>
+            <Link href="/ai-demo">
+              <Button size="lg" variant="outline">
+                View AI Demo
+              </Button>
+            </Link>
           </div>
 
-          {/* Trust Badges */}
+          {/* Capabilities Showcase */}
           <div className="pt-12 border-t border-border">
-            <p className="text-sm text-foreground/60 mb-8">Trusted by leading architecture and construction firms</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-center">
+            <p className="text-sm text-foreground/60 mb-8">Enterprise-grade architectural planning platform</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">500+</div>
-                <p className="text-sm text-foreground/60">Projects Generated</p>
+                <div className="text-lg font-semibold text-primary mb-2">Intelligent Space Optimization</div>
+                <p className="text-sm text-foreground/60">60–75% plot utilization with optimal room distributions and zoning</p>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">50K+</div>
-                <p className="text-sm text-foreground/60">Hours Saved</p>
+                <div className="text-lg font-semibold text-primary mb-2">Building Code Compliance</div>
+                <p className="text-sm text-foreground/60">Indian Standards (IS:875), proper setbacks, parking, and circulation zones</p>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">95%</div>
-                <p className="text-sm text-foreground/60">Accuracy Rate</p>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">10s</div>
-                <p className="text-sm text-foreground/60">Average Time</p>
+                <div className="text-lg font-semibold text-primary mb-2">Production-Ready Output</div>
+                <p className="text-sm text-foreground/60">Professional SVG, PDF, and structural documentation instantly</p>
               </div>
             </div>
           </div>
