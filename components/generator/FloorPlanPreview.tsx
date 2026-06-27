@@ -69,8 +69,8 @@ export function FloorPlanPreview({
       </div>
 
       {/* SVG Preview with premium styling */}
-      <div className={`bg-card/40 backdrop-blur border border-primary/20 rounded-lg overflow-auto ${isExpanded ? 'flex-1' : 'max-h-96'}`}>
-        <div className="inline-block min-w-full p-6 flex items-center justify-center">
+      <div className={`bg-card/40 backdrop-blur border border-primary/20 rounded-lg overflow-auto ${isExpanded ? 'flex-1' : 'h-96 lg:h-[32rem]'}`}>
+        <div className="w-full h-full p-6 flex items-center justify-center overflow-auto">
           <div 
             dangerouslySetInnerHTML={{ __html: svg }} 
             className="drop-shadow-2xl"

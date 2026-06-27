@@ -3,18 +3,14 @@
 import { useState } from 'react'
 import { InputForm } from '@/components/generator/InputForm'
 import { FloorPlanPreview } from '@/components/generator/FloorPlanPreview'
-import { StructuralOverlay } from '@/components/generator/StructuralOverlay'
-import { ThreeDPreview } from '@/components/generator/ThreeDPreview'
 import { CostEstimator } from '@/components/generator/CostEstimator'
-import { AIAssistant } from '@/components/generator/AIAssistant'
-import { PlotInput, Room, CostEstimate, StructuralElement } from '@/lib/types'
+import { PlotInput, Room, CostEstimate } from '@/lib/types'
 import { generateFloorPlanSVG, downloadSVG } from '@/lib/svg-generator'
 import {
   generateOptimalLayout,
   calculateBuildingStats,
   estimateCosts,
 } from '@/lib/layout-algorithms'
-import { generateStructuralLayout } from '@/lib/structural-calculator'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertCircle, CheckCircle } from 'lucide-react'
@@ -25,12 +21,6 @@ interface GeneratedPlan {
   floorPlanSvg: string
   costEstimate: CostEstimate
   buildingStats: ReturnType<typeof calculateBuildingStats>
-  structural: {
-    columns: StructuralElement[]
-    beams: StructuralElement[]
-    walls: StructuralElement[]
-    foundation: StructuralElement[]
-  }
 }
 
 export default function GeneratorPage() {
@@ -74,21 +64,12 @@ export default function GeneratorPage() {
       )
       console.log('[v0] Cost estimate calculated:', costEstimate)
 
-      // Generate structural layout
-      const structural = generateStructuralLayout(
-        input.length,
-        input.breadth,
-        input.numFloors
-      )
-      console.log('[v0] Structural layout generated:', structural)
-
       setGeneratedPlan({
         input,
         rooms,
         floorPlanSvg,
         costEstimate,
         buildingStats,
-        structural,
       })
     } catch (err) {
       console.error('[v0] Error generating plan:', err)
@@ -179,13 +160,10 @@ export default function GeneratorPage() {
             {/* Results Tabs */}
             {generatedPlan && (
               <Tabs defaultValue="floor-plan" className="w-full">
-                <TabsList className="grid w-full grid-cols-6">
-                  <TabsTrigger value="floor-plan">Floor Plan</TabsTrigger>
-                  <TabsTrigger value="3d">3D Preview</TabsTrigger>
-                  <TabsTrigger value="structural">Structural</TabsTrigger>
-                  <TabsTrigger value="stats">Statistics</TabsTrigger>
-                  <TabsTrigger value="costs">Cost Estimate</TabsTrigger>
-                  <TabsTrigger value="ai">AI Assistant</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="floor-plan" className="text-base">Floor Plan</TabsTrigger>
+                  <TabsTrigger value="stats" className="text-base">Statistics</TabsTrigger>
+                  <TabsTrigger value="costs" className="text-base">Cost Estimate</TabsTrigger>
                 </TabsList>
 
                 {/* Floor Plan Tab */}
@@ -197,27 +175,6 @@ export default function GeneratorPage() {
                     plotBreadth={generatedPlan.input.breadth}
                     floorNumber={1}
                     onDownload={handleDownloadSVG}
-                  />
-                </TabsContent>
-
-                {/* 3D Preview Tab */}
-                <TabsContent value="3d" className="space-y-4">
-                  <ThreeDPreview
-                    rooms={generatedPlan.rooms}
-                    plotLength={generatedPlan.input.length}
-                    plotBreadth={generatedPlan.input.breadth}
-                    numFloors={generatedPlan.input.numFloors}
-                  />
-                </TabsContent>
-
-                {/* Structural Tab */}
-                <TabsContent value="structural" className="space-y-4">
-                  <StructuralOverlay
-                    columns={generatedPlan.structural.columns}
-                    beams={generatedPlan.structural.beams}
-                    walls={generatedPlan.structural.walls}
-                    plotLength={generatedPlan.input.length}
-                    plotBreadth={generatedPlan.input.breadth}
                   />
                 </TabsContent>
 

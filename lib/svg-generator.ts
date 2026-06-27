@@ -2,7 +2,7 @@
 
 import { Room, StructuralElement } from './types';
 
-const SCALE = 35; // pixels per meter - increased for clarity and proper spacing
+const SCALE = 28; // pixels per meter - optimized for horizontal display and readability
 
 // Premium dark theme colors for rooms
 const ROOM_COLORS: Record<string, string> = {
@@ -33,6 +33,16 @@ const ROOM_BORDERS: Record<string, string> = {
   balcony: '#00ff88',
   staircase: '#00d9ff',
 };
+
+// Sanitize text for SVG to prevent corruption
+function sanitizeText(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 export function generateFloorPlanSVG(
   rooms: Room[],
@@ -103,7 +113,7 @@ export function generateFloorPlanSVG(
     svg += `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" fill="none" stroke="${borderColor}" stroke-width="0.5" rx="5" opacity="0.3"/>`;
     
     // Room name label (larger, more prominent)
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 - 10}" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff" dominant-baseline="middle">${room.name}</text>`;
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 - 10}" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff" dominant-baseline="middle">${sanitizeText(room.name)}</text>`;
     
     // Dimensions (clear cyan color)
     svg += `<text x="${x + w / 2}" y="${y + h / 2 + 6}" font-size="10" text-anchor="middle" fill="#00ffff" font-weight="500" dominant-baseline="middle">${room.width.toFixed(1)}m × ${room.height.toFixed(1)}m</text>`;
