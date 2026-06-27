@@ -76,133 +76,156 @@ function generateFloorLayout(
   const bottom = input.breadth - setbacks.rear - gap;
   
   if (floor === 1) {
-    // ============ GROUND FLOOR LAYOUT ============
-    // Zone 1: PUBLIC/PARKING (Top section - 40% height)
-    const parkingZoneHeight = (input.breadth - setbacks.front - setbacks.rear) * 0.35;
+    // ============ GROUND FLOOR LAYOUT - CLEAN HORIZONTAL FLOW ============
+    const spacing = 0.6;
     
-    // Parking spaces - 3 in a row at the top
-    let parkX = left;
-    const parkY = top;
+    // TOP ROW: Parking spaces (3 side by side)
+    let rowX = left;
+    const row1Y = top;
+    const parkingWidth = 2.4;
+    const parkingHeight = 5.0;
+    
     for (let i = 0; i < 3; i++) {
       rooms.push({
         id: `parking-${floor}-${i}`,
         name: `Parking ${i + 1}`,
         type: 'parking',
-        x: parkX,
-        y: parkY,
-        width: 2.5,
-        height: 5.0,
+        x: rowX,
+        y: row1Y,
+        width: parkingWidth,
+        height: parkingHeight,
         floor,
       });
-      parkX += 2.5 + gap;
-      if (parkX + 2.5 > right) break;
+      rowX += parkingWidth + spacing;
     }
     
-    // Zone 2: LIVING AREA (Middle - Common zones grouped together)
-    const livingZoneY = top + parkingZoneHeight;
-    let livingX = left;
+    // MIDDLE ROW: Living, Kitchen, Balcony (horizontal flow)
+    const row2Y = row1Y + parkingHeight + spacing;
+    rowX = left;
     
-    // Living Room (large, prominent)
+    // Living Room
+    const livingWidth = 4.5;
+    const livingHeight = 4.5;
     rooms.push({
       id: `living-${floor}`,
       name: 'Living 1',
       type: 'living',
-      x: livingX,
-      y: livingZoneY,
-      width: 4.5,
-      height: 4.5,
+      x: rowX,
+      y: row2Y,
+      width: livingWidth,
+      height: livingHeight,
       floor,
     });
     
-    // Kitchen adjacent to Living (connects naturally)
+    rowX += livingWidth + spacing;
+    
+    // Kitchen
+    const kitchenWidth = 2.8;
+    const kitchenHeight = 3.2;
     rooms.push({
       id: `kitchen-${floor}`,
-      name: 'Kitchen 4',
+      name: 'Kitchen',
       type: 'kitchen',
-      x: livingX + 4.5 + gap,
-      y: livingZoneY,
-      width: 2.4,
-      height: 3.0,
+      x: rowX,
+      y: row2Y,
+      width: kitchenWidth,
+      height: kitchenHeight,
       floor,
     });
     
-    // Balcony next to kitchen (outdoor connection)
+    rowX += kitchenWidth + spacing;
+    
+    // Balcony
+    const balconyWidth = 2.0;
+    const balconyHeight = 4.5;
     rooms.push({
       id: `balcony-${floor}`,
       name: 'Balcony',
       type: 'balcony',
-      x: livingX + 4.5 + gap + 2.4 + gap,
-      y: livingZoneY,
-      width: 1.8,
-      height: 3.0,
+      x: rowX,
+      y: row2Y,
+      width: balconyWidth,
+      height: balconyHeight,
       floor,
     });
     
-    // Zone 3: PRIVATE AREAS (Bedrooms below living area)
-    const bedroomZoneY = livingZoneY + 4.5 + gap;
-    let bedroomX = left;
+    // BOTTOM ROW: Bedrooms, Bathroom, Staircase, Storage (all in one line)
+    const row3Y = row2Y + livingHeight + spacing;
+    rowX = left;
     
     // Bedroom 2
+    const bedroomWidth = 3.2;
+    const bedroomHeight = 3.6;
     rooms.push({
       id: `bedroom-${floor}-2`,
       name: 'Bedroom 2',
       type: 'bedroom',
-      x: bedroomX,
-      y: bedroomZoneY,
-      width: 3.0,
-      height: 3.6,
+      x: rowX,
+      y: row3Y,
+      width: bedroomWidth,
+      height: bedroomHeight,
       floor,
     });
+    
+    rowX += bedroomWidth + spacing;
     
     // Bedroom 3
     rooms.push({
       id: `bedroom-${floor}-3`,
       name: 'Bedroom 3',
       type: 'bedroom',
-      x: bedroomX + 3.0 + gap,
-      y: bedroomZoneY,
-      width: 3.0,
-      height: 3.6,
+      x: rowX,
+      y: row3Y,
+      width: bedroomWidth,
+      height: bedroomHeight,
       floor,
     });
     
-    // Bathroom (serves both bedrooms, positioned between them)
+    rowX += bedroomWidth + spacing;
+    
+    // Bathroom
+    const bathroomWidth = 2.0;
+    const bathroomHeight = 2.4;
     rooms.push({
       id: `bathroom-${floor}`,
       name: 'Bathroom',
       type: 'bathroom',
-      x: bedroomX + 3.0 + gap + 3.0 + gap,
-      y: bedroomZoneY,
-      width: 1.8,
-      height: 2.1,
+      x: rowX,
+      y: row3Y,
+      width: bathroomWidth,
+      height: bathroomHeight,
       floor,
     });
     
-    // Zone 4: SERVICE AREAS (Right side - Staircase and Storage)
-    const serviceX = left + (right - left) - 1.8 - 1.8 - gap;
-    const serviceY = bedroomZoneY;
+    rowX += bathroomWidth + spacing;
     
     // Staircase
+    const stairsWidth = 2.0;
+    const stairsHeight = 3.0;
     rooms.push({
       id: `staircase-${floor}`,
       name: 'Staircase',
       type: 'staircase',
-      x: serviceX,
-      y: serviceY,
-      width: 1.8,
-      height: 3.0,
+      x: rowX,
+      y: row3Y,
+      width: stairsWidth,
+      height: stairsHeight,
       floor,
     });
     
+    rowX += stairsWidth + spacing;
+    
     // Storage
+    const storageWidth = 2.0;
+    const storageHeight = 2.6;
     rooms.push({
       id: `storage-${floor}`,
       name: 'Storage',
       type: 'storage',
-      x: serviceX + 1.8 + gap,
-      y: serviceY,
-      width: 1.8,
-      height: 2.4,
+      x: rowX,
+      y: row3Y,
+      width: storageWidth,
+      height: storageHeight,
       floor,
     });
   } else {
