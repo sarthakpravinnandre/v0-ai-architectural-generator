@@ -2,7 +2,7 @@
 
 import { Room, StructuralElement } from './types';
 
-const SCALE = 20; // pixels per meter
+const SCALE = 35; // pixels per meter - increased for clarity and proper spacing
 
 // Premium dark theme colors for rooms
 const ROOM_COLORS: Record<string, string> = {
@@ -102,14 +102,14 @@ export function generateFloorPlanSVG(
     // Inner border highlight
     svg += `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" fill="none" stroke="${borderColor}" stroke-width="0.5" rx="5" opacity="0.3"/>`;
     
-    // Room name label
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 - 12}" font-size="11" text-anchor="middle" font-weight="bold" fill="#f0f4f8">${room.name}</text>`;
+    // Room name label (larger, more prominent)
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 - 10}" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff" dominant-baseline="middle">${room.name}</text>`;
     
-    // Dimensions
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 3}" font-size="9" text-anchor="middle" fill="#00d9ff" opacity="0.9">${room.width.toFixed(1)}m × ${room.height.toFixed(1)}m</text>`;
+    // Dimensions (clear cyan color)
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 6}" font-size="10" text-anchor="middle" fill="#00ffff" font-weight="500" dominant-baseline="middle">${room.width.toFixed(1)}m × ${room.height.toFixed(1)}m</text>`;
     
-    // Area in square meters
-    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 14}" font-size="8" text-anchor="middle" fill="#a0aec0" opacity="0.7">${(room.width * room.height).toFixed(1)} m²</text>`;
+    // Area in square meters (lighter color, below dimensions)
+    svg += `<text x="${x + w / 2}" y="${y + h / 2 + 18}" font-size="9" text-anchor="middle" fill="#c0f0ff" dominant-baseline="middle">${(room.width * room.height).toFixed(1)} m²</text>`;
   }
   
   // Legend

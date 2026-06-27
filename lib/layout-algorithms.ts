@@ -68,40 +68,228 @@ function generateFloorLayout(
   floor: number
 ): Room[] {
   const rooms: Room[] = [];
-  const spacing = 0.4; // Gap between rooms
+  const gap = 0.5; // Spacing between rooms
   
-  // Define usable area boundaries
-  const boundaryLeft = setbacks.left;
-  const boundaryRight = input.length - setbacks.right;
-  const boundaryTop = setbacks.front;
-  const boundaryBottom = input.breadth - setbacks.rear;
+  const left = setbacks.left + gap;
+  const top = setbacks.front + gap;
+  const right = input.length - setbacks.right - gap;
+  const bottom = input.breadth - setbacks.rear - gap;
   
   if (floor === 1) {
-    // GROUND FLOOR: Parking + Lobby + Staircase
+    // ============ GROUND FLOOR LAYOUT ============
+    // Zone 1: PUBLIC/PARKING (Top section - 40% height)
+    const parkingZoneHeight = (input.breadth - setbacks.front - setbacks.rear) * 0.35;
     
-    // Top row: Parking spaces (arranged horizontally)
-    const parkingHeight = ROOM_SPECS.parking.height;
-    const parkingWidth = ROOM_SPECS.parking.width;
-    let parkX = boundaryLeft + spacing;
-    const parkY = boundaryTop + spacing;
-    
-    // Calculate how many parkings fit in the available width
-    const maxParkingPerRow = Math.floor((usableLength - spacing) / (parkingWidth + spacing));
-    const actualParking = Math.min(parkingSpaces, Math.min(4, maxParkingPerRow));
-    
-    for (let i = 0; i < actualParking; i++) {
+    // Parking spaces - 3 in a row at the top
+    let parkX = left;
+    const parkY = top;
+    for (let i = 0; i < 3; i++) {
       rooms.push({
         id: `parking-${floor}-${i}`,
         name: `Parking ${i + 1}`,
         type: 'parking',
         x: parkX,
         y: parkY,
-        width: parkingWidth,
-        height: parkingHeight,
+        width: 2.5,
+        height: 5.0,
         floor,
       });
-      parkX += parkingWidth + spacing;
+      parkX += 2.5 + gap;
+      if (parkX + 2.5 > right) break;
     }
+    
+    // Zone 2: LIVING AREA (Middle - Common zones grouped together)
+    const livingZoneY = top + parkingZoneHeight;
+    let livingX = left;
+    
+    // Living Room (large, prominent)
+    rooms.push({
+      id: `living-${floor}`,
+      name: 'Living 1',
+      type: 'living',
+      x: livingX,
+      y: livingZoneY,
+      width: 4.5,
+      height: 4.5,
+      floor,
+    });
+    
+    // Kitchen adjacent to Living (connects naturally)
+    rooms.push({
+      id: `kitchen-${floor}`,
+      name: 'Kitchen 4',
+      type: 'kitchen',
+      x: livingX + 4.5 + gap,
+      y: livingZoneY,
+      width: 2.4,
+      height: 3.0,
+      floor,
+    });
+    
+    // Balcony next to kitchen (outdoor connection)
+    rooms.push({
+      id: `balcony-${floor}`,
+      name: 'Balcony',
+      type: 'balcony',
+      x: livingX + 4.5 + gap + 2.4 + gap,
+      y: livingZoneY,
+      width: 1.8,
+      height: 3.0,
+      floor,
+    });
+    
+    // Zone 3: PRIVATE AREAS (Bedrooms below living area)
+    const bedroomZoneY = livingZoneY + 4.5 + gap;
+    let bedroomX = left;
+    
+    // Bedroom 2
+    rooms.push({
+      id: `bedroom-${floor}-2`,
+      name: 'Bedroom 2',
+      type: 'bedroom',
+      x: bedroomX,
+      y: bedroomZoneY,
+      width: 3.0,
+      height: 3.6,
+      floor,
+    });
+    
+    // Bedroom 3
+    rooms.push({
+      id: `bedroom-${floor}-3`,
+      name: 'Bedroom 3',
+      type: 'bedroom',
+      x: bedroomX + 3.0 + gap,
+      y: bedroomZoneY,
+      width: 3.0,
+      height: 3.6,
+      floor,
+    });
+    
+    // Bathroom (serves both bedrooms, positioned between them)
+    rooms.push({
+      id: `bathroom-${floor}`,
+      name: 'Bathroom',
+      type: 'bathroom',
+      x: bedroomX + 3.0 + gap + 3.0 + gap,
+      y: bedroomZoneY,
+      width: 1.8,
+      height: 2.1,
+      floor,
+    });
+    
+    // Zone 4: SERVICE AREAS (Right side - Staircase and Storage)
+    const serviceX = left + (right - left) - 1.8 - 1.8 - gap;
+    const serviceY = bedroomZoneY;
+    
+    // Staircase
+    rooms.push({
+      id: `staircase-${floor}`,
+      name: 'Staircase',
+      type: 'staircase',
+      x: serviceX,
+      y: serviceY,
+      width: 1.8,
+      height: 3.0,
+      floor,
+    });
+    
+    // Storage
+    rooms.push({
+      id: `storage-${floor}`,
+      name: 'Storage',
+      type: 'storage',
+      x: serviceX + 1.8 + gap,
+      y: serviceY,
+      width: 1.8,
+      height: 2.4,
+      floor,
+    });
+  } else {
+    // ============ UPPER FLOORS LAYOUT ============
+    // Clean single-unit layout
+    let currentY = top;
+    let currentX = left;
+    
+    // Living Room (prominent, largest)
+    rooms.push({
+      id: `living-${floor}`,
+      name: 'Living 1',
+      type: 'living',
+      x: currentX,
+      y: currentY,
+      width: 4.5,
+      height: 4.5,
+      floor,
+    });
+    
+    // Bedroom 2 next to living
+    rooms.push({
+      id: `bedroom-${floor}-2`,
+      name: 'Bedroom 2',
+      type: 'bedroom',
+      x: currentX + 4.5 + gap,
+      y: currentY,
+      width: 3.0,
+      height: 3.6,
+      floor,
+    });
+    
+    // Bedroom 3 at the end
+    rooms.push({
+      id: `bedroom-${floor}-3`,
+      name: 'Bedroom 3',
+      type: 'bedroom',
+      x: currentX + 4.5 + gap + 3.0 + gap,
+      y: currentY,
+      width: 3.0,
+      height: 3.6,
+      floor,
+    });
+    
+    // Second row: Service spaces
+    currentY += 4.5 + gap;
+    currentX = left;
+    
+    // Kitchen
+    rooms.push({
+      id: `kitchen-${floor}`,
+      name: 'Kitchen 4',
+      type: 'kitchen',
+      x: currentX,
+      y: currentY,
+      width: 2.4,
+      height: 3.0,
+      floor,
+    });
+    
+    // Bathroom
+    rooms.push({
+      id: `bathroom-${floor}`,
+      name: 'Bathroom',
+      type: 'bathroom',
+      x: currentX + 2.4 + gap,
+      y: currentY,
+      width: 1.8,
+      height: 2.1,
+      floor,
+    });
+    
+    // Balcony
+    rooms.push({
+      id: `balcony-${floor}`,
+      name: 'Balcony',
+      type: 'balcony',
+      x: currentX + 2.4 + gap + 1.8 + gap,
+      y: currentY,
+      width: 1.8,
+      height: 3.0,
+      floor,
+    });
+  }
+  
+  return rooms;
+}
     
     // Middle row: Main spaces (Living, Kitchen, Bedrooms)
     const middleY = parkY + parkingHeight + spacing;
