@@ -274,16 +274,6 @@ export default function GeneratorPage() {
                     costEstimate={generatedPlan.costEstimate}
                   />
                 </TabsContent>
-
-                {/* AI Assistant Tab */}
-                <TabsContent value="ai" className="space-y-4">
-                  <AIAssistant
-                    rooms={generatedPlan.rooms}
-                    plotLength={generatedPlan.input.length}
-                    plotBreadth={generatedPlan.input.breadth}
-                    numFloors={generatedPlan.input.numFloors}
-                  />
-                </TabsContent>
               </Tabs>
             )}
 
