@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { InputForm } from '@/components/generator/InputForm'
 import { FloorPlanPreview } from '@/components/generator/FloorPlanPreview'
 import { CostEstimator } from '@/components/generator/CostEstimator'
+import { AIChatbot } from '@/components/generator/AIChatbot'
+import { BuildingStructure } from '@/components/generator/BuildingStructure'
 import { PlotInput, Room, CostEstimate } from '@/lib/types'
 import { generateFloorPlanSVG, downloadSVG } from '@/lib/svg-generator'
 import {
@@ -160,10 +162,12 @@ export default function GeneratorPage() {
             {/* Results Tabs */}
             {generatedPlan && (
               <Tabs defaultValue="floor-plan" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="floor-plan" className="text-base">Floor Plan</TabsTrigger>
+                  <TabsTrigger value="structure" className="text-base">Structure</TabsTrigger>
                   <TabsTrigger value="stats" className="text-base">Statistics</TabsTrigger>
                   <TabsTrigger value="costs" className="text-base">Cost Estimate</TabsTrigger>
+                  <TabsTrigger value="ai" className="text-base">AI Assistant</TabsTrigger>
                 </TabsList>
 
                 {/* Floor Plan Tab */}
@@ -268,10 +272,32 @@ export default function GeneratorPage() {
                   </Card>
                 </TabsContent>
 
+                {/* Building Structure Tab */}
+                <TabsContent value="structure" className="space-y-4">
+                  <BuildingStructure
+                    numFloors={generatedPlan.input.numFloors}
+                    plotLength={generatedPlan.input.length}
+                    plotBreadth={generatedPlan.input.breadth}
+                  />
+                </TabsContent>
+
                 {/* Cost Estimate Tab */}
                 <TabsContent value="costs">
                   <CostEstimator
                     costEstimate={generatedPlan.costEstimate}
+                  />
+                </TabsContent>
+
+                {/* AI Chatbot Tab */}
+                <TabsContent value="ai" className="space-y-4 min-h-96">
+                  <AIChatbot
+                    floorPlanData={{
+                      builtUpArea: generatedPlan.buildingStats.builtUpArea,
+                      carpetArea: generatedPlan.buildingStats.carpetArea,
+                      numRooms: generatedPlan.rooms.length,
+                      plotLength: generatedPlan.input.length,
+                      plotBreadth: generatedPlan.input.breadth,
+                    }}
                   />
                 </TabsContent>
               </Tabs>
