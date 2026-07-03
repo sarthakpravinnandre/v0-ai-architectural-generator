@@ -136,12 +136,10 @@ export function InputForm({ onGenerate, isLoading = false }: InputFormProps) {
                   <Input
                     type="number"
                     placeholder="30"
-                    value={field.value || ''}
-                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')}
-                    onBlur={field.onBlur}
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                     min={5}
                     max={500}
-                    step={1}
                   />
                 </FormControl>
                 <FormDescription>
@@ -163,12 +161,10 @@ export function InputForm({ onGenerate, isLoading = false }: InputFormProps) {
                   <Input
                     type="number"
                     placeholder="40"
-                    value={field.value || ''}
-                    onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')}
-                    onBlur={field.onBlur}
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                     min={5}
                     max={500}
-                    step={1}
                   />
                 </FormControl>
                 <FormDescription>
