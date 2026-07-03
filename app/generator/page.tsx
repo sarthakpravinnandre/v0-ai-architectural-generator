@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { AlertCircle } from 'lucide-react'
 import { InputForm } from '@/components/generator/InputForm'
 import { FloorPlanViewer } from '@/components/dashboard/FloorPlanViewer'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'

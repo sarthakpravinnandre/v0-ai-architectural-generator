@@ -31,7 +31,7 @@ export function DashboardLayout({
       <Sidebar activeItem={activeMenuItem} onItemClick={handleMenuClick} />
 
       {/* Main Content */}
-      <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="ml-64 flex-1 flex flex-col h-screen overflow-hidden z-0">
         {children}
       </div>
 
