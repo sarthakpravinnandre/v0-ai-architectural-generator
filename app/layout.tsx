@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Visionary - AI Architectural Plan Generator',
-  description: 'Automatically generate professional 2D floor plans, structural layouts, and cost estimates using AI-powered space optimization. Enterprise-grade solution for architects and builders.',
+  title: 'Clarivo — Architecture Intelligence Platform',
+  description: 'Design, coordinate, and communicate better buildings with Clarivo, an AI-native architecture intelligence workspace.',
   generator: 'v0.app',
   icons: {
     icon: [
