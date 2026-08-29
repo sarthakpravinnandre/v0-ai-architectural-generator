@@ -195,42 +195,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Created By Section */}
-      <section className="bg-gradient-to-b from-secondary/5 to-background py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-center">
-            <h3 className="text-lg font-semibold text-foreground/70 mb-8">Created by</h3>
-            
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-              {/* Profile Photo */}
-              <div className="flex-shrink-0">
-                <img 
-                  src="sarthak-photo.jpg" 
-                  alt="Sarthak Nandre" 
-                  className="w-32 h-32 md:w-40 md:h-40 rounded-2xl object-cover border-2 border-primary/30 shadow-lg hover:shadow-xl hover:border-primary/60 transition-all duration-300"
-                />
-              </div>
-              
-              {/* Creator Info */}
-              <div className="text-center md:text-left space-y-3">
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Sarthak Nandre
-                </h2>
-                <p className="text-foreground/70 text-sm md:text-base">
-                  Architectural AI & Web Development
-                </p>
-                <a 
-                  href="mailto:nandresarthak1977@gmail.com"
-                  className="inline-block text-primary hover:text-primary/80 transition-colors text-sm md:text-base font-medium"
-                >
-                  nandresarthak1977@gmail.com
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="border-t border-border bg-background/50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
